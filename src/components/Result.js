@@ -6,21 +6,7 @@ export class Result extends React.Component {
 	state = {
 		searchIP: '',
 		resObject: {},
-		prevObjects: [
-			{
-				ip: '8.8.8.8',
-				country_code: 'US',
-				country: 'United states',
-				country_rus: 'США',
-				region: 'California',
-				city: 'Mountain view',
-				city_rus: 'Маунтин-Вью',
-				latitude: '37.405992',
-				longitude: '-122.078515',
-				zip_code: '94043',
-				time_zone: '-07:00',
-			},
-		],
+		prevObjects: [],
 		isLoading: false,
 	};
 

@@ -6,7 +6,6 @@ export class HeaderInput extends React.Component {
 	state = {
 		valid: false,
 		ip: '',
-		status: false,
 	};
 
 	componentDidMount() {
@@ -42,14 +41,20 @@ export class HeaderInput extends React.Component {
 	//handle button click
 	handleClickOK = () => {
 		if (this.validate()) {
-			this.setState({ status: true });
+			this.props.handleInput(this.state.ip);
+		}
+	};
+
+	//handle Enter key press
+	handleKeyPress = event => {
+		if (event.key === 'Enter' && this.validate()) {
 			this.props.handleInput(this.state.ip);
 		}
 	};
 
 	handleChange = event => {
 		const { value } = event.currentTarget;
-		this.setState({ ip: value, status: false });
+		this.setState({ ip: value });
 	};
 
 	componentDidUpdate(prevProps, prevState) {
@@ -83,6 +88,7 @@ export class HeaderInput extends React.Component {
 									: 'HeaderInput__error HeaderInput__input'
 							}
 							onChange={this.handleChange}
+							onKeyPress={this.handleKeyPress}
 							autoFocus={true}
 							value={ip}
 						/>
