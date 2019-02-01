@@ -9,13 +9,10 @@ export class HeaderInput extends React.Component {
 		status: false,
 	};
 
-	static getDerivedStateFromProps(nextProps, prevState) {
-		const { lastIP } = nextProps;
+	componentDidMount() {
+		const lastIP = localStorage.getItem('lastIP');
 
-		if (lastIP !== prevState.ip && prevState.ip === '') {
-			return { ip: lastIP };
-		}
-		return null;
+		if (lastIP) this.setState({ ip: lastIP });
 	}
 
 	validate = () => {
@@ -56,28 +53,23 @@ export class HeaderInput extends React.Component {
 	};
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState.ip !== this.state.ip && prevState.ip !== '') {
-			console.log('Write new IP to .json ', this.state.ip);
-			const ip = this.state.ip;
-			fetch('http://localhost:3000/data/lastIP.json', {
-				method: 'post',
-				body: JSON.stringify(ip),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			})
-				.then(function(data) {
-					console.log('Request succeeded with response', data);
-				})
-				.catch(function(error) {
-					console.log('Request failed', error);
-				});
+		const { ip } = this.state;
+		//check if search request changed
+		if (prevState.ip !== ip) {
+			//add IP to lastIP in LocalStorage
+			try {
+				localStorage.setItem('lastIP', ip);
+			} catch (e) {
+				if (e.name === 'QUOTA_EXCEEDED_ERR') {
+					console.log('Превышен лимит LocalStorage');
+				}
+			}
 		}
 	}
 
 	render() {
 		const { valid, ip } = this.state;
-		console.log('Render props:', this.props);
+
 		return (
 			<React.Fragment>
 				<header className="HeaderInput">
@@ -109,5 +101,4 @@ export class HeaderInput extends React.Component {
 
 HeaderInput.propTypes = {
 	handleInput: PropTypes.func.isRequired,
-	lastIP: PropTypes.string.isRequired,
 };
